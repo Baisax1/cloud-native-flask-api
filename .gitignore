@@ -1,0 +1,19 @@
+# Entorno virtual
+venv/
+.venv/
+
+# Variables secretas
+.env
+
+# Archivos de caché de Python
+__pycache__/
+*.pyc
+
+# Caché de Pytest
+.pytest_cache/
+.coverage
+
+# Carpetas del editor y del sistema
+.vscode/
+.idea/
+Thumbs.db
