@@ -1,0 +1,33 @@
+services:
+  api:
+
+    build: .
+    container_name: flask_api
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - AWS_ENDPOINT_URL=http://floci:4566
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+    depends_on:
+      - floci
+
+  floci:
+    image: floci/floci:latest
+    container_name: floci_cloud
+    ports:
+      - "4566:4566"
+    environment:
+      - DOCKER-HOST=unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - floci_data:/app/data
+
+volumes:
+
+  floci_data:
+
+
+
