@@ -13,8 +13,15 @@ services:
       - AWS_DEFAULT_REGION=us-east-1
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
+      - DATABASE_URL=postgresql://postgres:secretpassword@db:5432/app_db
     depends_on:
-      - floci
+      floci:
+        condition: service_healthy
+      db:
+        condition: service_started
+    networks:
+      - frontend_net
+      - backend_net
 
   floci:
     image: floci/floci:latest
@@ -26,9 +33,31 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - floci_data:/app/data
+    networks:
+      - backend_net
+
+  db:
+    image: postgres:16-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: app_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secretpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend_net
+
+networks:
+  frontend_net:
+    driver: bridge
+  backend_net:
+    driver: bridge
 
 volumes:
-
+  postgres_data:
   floci_data:
 
 
